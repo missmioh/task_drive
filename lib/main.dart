@@ -17,19 +17,24 @@ class AddictiveTasks extends StatelessWidget {
         ),
         body: Column(
           children: [
-            // header view
+
+            // header, wo z.B. User-Daten stehen könnten
+
             Expanded(
               flex: 1,
               child: Container(color: Colors.amber.shade100),
             ),
             
-            // task info view
+            // Infos über die Tasks (z.B. wie viele übrig sind)
+            // Könnte aber auch für die Kategorien-Unterseite sein
+
             Expanded(
               flex: 1,
               child: Container(color: Colors.amber.shade200),
             ),
 
-            // task list view
+            // Ansicht der Listen-Elemente
+
             Expanded(
               flex: 7,
               child: Container(color: Colors.amber.shade300),
@@ -45,7 +50,6 @@ class AddictiveTasks extends StatelessWidget {
           child: Icon(Icons.add),
         ),
       ),
-
     );
   }
 }
