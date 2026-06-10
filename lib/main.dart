@@ -1,54 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/view_models/app_view_model.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-
-  runApp( AddictiveTasks() );
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AppViewModel(),
+      child: const AddictiveTasks(),
+    ),
+  );
 }
 
 class AddictiveTasks extends StatelessWidget {
-  const AddictiveTasks ({super.key});
+  const AddictiveTasks({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(backgroundColor: Colors.amber.shade600,
-        title: const Text('Addictive Tasks'),
-        ),
-        body: Column(
-          children: [
-
-            // header, wo z.B. User-Daten stehen könnten
-
-            Expanded(
-              flex: 1,
-              child: Container(color: Colors.amber.shade100),
+      home: Consumer<AppViewModel>(
+        builder: (context, viewModel, child) {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: viewModel.colorDarkest,
+              title: const Text('Addictive Tasks'),
             ),
-            
-            // Infos über die Tasks (z.B. wie viele übrig sind)
-            // Könnte aber auch für die Kategorien-Unterseite sein
+            body: Column(
+              children: [
+                // header, wo z.B. User-Daten stehen könnten
+                Expanded(
+                  flex: 1,
+                  child: Container(color: viewModel.colorLight),
+                ),
 
-            Expanded(
-              flex: 1,
-              child: Container(color: Colors.amber.shade200),
+                // Infos über die Tasks (z.B. wie viele übrig sind)
+                // Könnte aber auch für die Kategorien-Unterseite sein
+                Expanded(
+                  flex: 1,
+                  child: Container(color: viewModel.colorMedium),
+                ),
+
+                // Ansicht der Listen-Elemente
+                Expanded(flex: 7, child: Container(color: viewModel.colorDark)),
+              ],
             ),
 
-            // Ansicht der Listen-Elemente
-
-            Expanded(
-              flex: 7,
-              child: Container(color: Colors.amber.shade300),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                print('printing pressed...');
+              },
+              backgroundColor: viewModel.colorDarkest,
+              child: Icon(Icons.add),
             ),
-          ],
-        ),
-
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            print('printing pressed...');
-          },
-          backgroundColor: Colors.amber.shade600,
-          child: Icon(Icons.add),
-        ),
+          );
+        },
       ),
     );
   }
