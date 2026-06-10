@@ -25,6 +25,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     {'title': 'Beispieltask 3', 'done': false},
   ];
 
+  void addTask(String title) {
+    if (title.trim().isEmpty) return;
+
+    setState(() {
+      tasks.add({'title': title.trim(), 'done': false});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -110,7 +118,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                print('printing pressed...');
+                addTask('Neuer Task');
               },
               backgroundColor: viewModel.colorDarkest,
               child: Icon(Icons.add),
