@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 
 class BottomSheetView extends StatelessWidget {
-  const BottomSheetView({super.key});
+  final void Function(String) addTask;
+
+  const BottomSheetView({super.key, required this.addTask});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +26,8 @@ class BottomSheetView extends StatelessWidget {
                 child: TextField(
                   controller: entryController,
                   onSubmitted: (value) {
-                    if (entryController.text.isNotEmpty) {
-                      Task newTask = Task(entryController.text, false);
-                      // muss noch verbunden werden
-                      viewModel.addTask(newTask);
-                      entryController.clear();
+                    if (value.trim().isNotEmpty) {
+                      addTask(value.trim());
                     }
                     Navigator.of(context).pop();
                   },

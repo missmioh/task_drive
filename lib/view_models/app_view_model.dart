@@ -14,6 +14,11 @@ class Task {
 class AppViewModel extends ChangeNotifier {
   List<Task> tasks = <Task>[];
 
+  void addTask(Task task) {
+    tasks.add(task);
+    notifyListeners();
+  }
+
   // Farb-Schemata
 
   Color colorLight = Colors.amber.shade100;
