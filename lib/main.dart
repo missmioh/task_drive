@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_app/views/bottom_sheet.dart';
 
 void main() {
   runApp(
@@ -118,7 +119,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                addTask('Neuer Task');
+                viewModel.bottomSheetBuilder(
+                  BottomSheetView(addTask: addTask),
+                  context,
+                );
               },
               backgroundColor: viewModel.colorDarkest,
               child: Icon(Icons.add),
