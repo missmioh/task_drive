@@ -26,6 +26,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     {'title': 'Beispieltask 3', 'done': false},
   ];
 
+  // Funktionen
+
   void addTask(String title) {
     if (title.trim().isEmpty) return;
 
@@ -33,6 +35,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
       tasks.add({'title': title.trim(), 'done': false});
     });
   }
+
+  void deleteTask(int taskIndex) {
+    setState(() {
+      tasks.removeAt(taskIndex);
+    });
+  }
+
+  // Oberfläche
 
   @override
   Widget build(BuildContext context) {
@@ -78,36 +88,44 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                       itemBuilder: (context, index) {
                         final task = tasks[index];
 
-                        return Card(
+                        return Dismissible(
                           key: ValueKey(task['title']),
-                          color: viewModel.colorMedium,
-                          margin: const EdgeInsets.only(bottom: 12),
-                          elevation: 3,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
+                          onDismissed: (direction) {
+                            setState(() {
+                              deleteTask(index);
+                            });
+                          },
+                          child: Card(
+                            key: ValueKey(task['title']),
+                            color: viewModel.colorMedium,
+                            margin: const EdgeInsets.only(bottom: 12),
+                            elevation: 3,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
 
-                          child: CheckboxListTile(
-                            value: task['done'],
-                            side: BorderSide(
-                              color: viewModel.colorDark,
-                              width: 2,
-                            ),
-                            activeColor: viewModel.colorText,
-                            title: Text(
-                              task['title'],
-                              style: TextStyle(
-                                fontSize: 20,
-                                decoration: task['done']
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
+                            child: CheckboxListTile(
+                              value: task['done'],
+                              side: BorderSide(
+                                color: viewModel.colorDark,
+                                width: 2,
                               ),
+                              activeColor: viewModel.colorText,
+                              title: Text(
+                                task['title'],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  decoration: task['done']
+                                      ? TextDecoration.lineThrough
+                                      : TextDecoration.none,
+                                ),
+                              ),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  task['done'] = newValue;
+                                });
+                              },
                             ),
-                            onChanged: (newValue) {
-                              setState(() {
-                                task['done'] = newValue;
-                              });
-                            },
                           ),
                         );
                       },
