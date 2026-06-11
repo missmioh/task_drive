@@ -102,6 +102,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           tasks.insert(newIndex, task);
                         });
                       },
+
                       itemBuilder: (context, index) {
                         final task = tasks[index];
 
@@ -126,6 +127,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             ),
                           ),
 
+                          // Registriert, wenn der Nutzer auf den Text klickt
                           child: GestureDetector(
                             onTap: () {
                               viewModel.bottomSheetBuilder(
@@ -138,6 +140,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 context,
                               );
                             },
+
                             child: Card(
                               key: ValueKey(task['title']),
                               color: viewModel.colorMedium,
@@ -147,14 +150,28 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
 
+                              // Styles für die Checkboxes
                               child: ListTile(
-                                leading: Checkbox(
-                                  value: task['done'],
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      task['done'] = newValue;
-                                    });
-                                  },
+                                trailing: Transform.scale(
+                                  scale: 1.3,
+                                  child: Checkbox(
+                                    value: task['done'],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(4),
+                                    ),
+                                    side: BorderSide(
+                                      color: viewModel.colorDark,
+                                      width: 2,
+                                    ),
+                                    activeColor: viewModel.colorText,
+                                    checkColor: viewModel.colorLight,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        task['done'] = newValue;
+                                      });
+                                    },
+                                  ),
                                 ),
                                 title: Text(
                                   task['title'],
