@@ -32,7 +32,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     if (title.trim().isEmpty) return;
 
     setState(() {
-      tasks.add({'title': title.trim(), 'done': false});
+      tasks.insert(0, {'title': title.trim(), 'done': false});
     });
   }
 
@@ -78,6 +78,15 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     child: ReorderableListView.builder(
                       padding: const EdgeInsets.all(12),
                       itemCount: tasks.length,
+
+                      // überschreibt die Standard-Einstellung für weißen Hintergrund von Drag-Items
+                      proxyDecorator: (child, index, animation) {
+                        return Material(
+                          color: Colors.transparent,
+                          child: child,
+                        );
+                      },
+
                       onReorder: (oldIndex, newIndex) {
                         setState(() {
                           if (newIndex > oldIndex) newIndex -= 1;
