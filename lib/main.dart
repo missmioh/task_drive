@@ -95,6 +95,19 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                               deleteTask(index);
                             });
                           },
+                          background: Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            decoration: BoxDecoration(
+                              color: viewModel.colorAccent1,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Icon(
+                                Icons.delete,
+                                color: viewModel.colorAccent2,
+                              ),
+                            ),
+                          ),
                           child: Card(
                             key: ValueKey(task['title']),
                             color: viewModel.colorMedium,
