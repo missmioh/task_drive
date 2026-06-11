@@ -32,7 +32,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     if (title.trim().isEmpty) return;
 
     setState(() {
-      tasks.add({'title': title.trim(), 'done': false});
+      tasks.insert(0, {'title': title.trim(), 'done': false});
     });
   }
 
