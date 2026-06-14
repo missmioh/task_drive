@@ -3,13 +3,18 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 
 class BottomSheetView extends StatelessWidget {
-  final void Function(String) addTask;
+  final String initialText;
+  final void Function(String) onSubmit;
 
-  const BottomSheetView({super.key, required this.addTask});
+  const BottomSheetView({
+    super.key,
+    required this.initialText,
+    required this.onSubmit,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController entryController = TextEditingController();
+    final entryController = TextEditingController(text: initialText);
 
     return Consumer<AppViewModel>(
       builder: (context, viewModel, child) {
@@ -27,7 +32,7 @@ class BottomSheetView extends StatelessWidget {
                   controller: entryController,
                   onSubmitted: (value) {
                     if (value.trim().isNotEmpty) {
-                      addTask(value.trim());
+                      onSubmit(value.trim());
                     }
                     Navigator.of(context).pop();
                   },

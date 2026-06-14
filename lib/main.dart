@@ -42,6 +42,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     });
   }
 
+  void editTask(int index, String newTitle) {
+    if (newTitle.trim().isEmpty) return;
+
+    setState(() {
+      tasks[index]['title'] = newTitle.trim();
+    });
+  }
+
   // Oberfläche
 
   @override
@@ -94,6 +102,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           tasks.insert(newIndex, task);
                         });
                       },
+
                       itemBuilder: (context, index) {
                         final task = tasks[index];
 
@@ -117,36 +126,62 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                               ),
                             ),
                           ),
-                          child: Card(
-                            key: ValueKey(task['title']),
-                            color: viewModel.colorMedium,
-                            margin: const EdgeInsets.only(bottom: 12),
-                            elevation: 3,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
 
-                            child: CheckboxListTile(
-                              value: task['done'],
-                              side: BorderSide(
-                                color: viewModel.colorDark,
-                                width: 2,
+                          // Registriert, wenn der Nutzer auf den Text klickt
+                          child: GestureDetector(
+                            onTap: () {
+                              viewModel.bottomSheetBuilder(
+                                BottomSheetView(
+                                  initialText: task['title'],
+                                  onSubmit: (newValue) {
+                                    editTask(index, newValue);
+                                  },
+                                ),
+                                context,
+                              );
+                            },
+
+                            child: Card(
+                              key: ValueKey(task['title']),
+                              color: viewModel.colorMedium,
+                              margin: const EdgeInsets.only(bottom: 12),
+                              elevation: 3,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
                               ),
-                              activeColor: viewModel.colorText,
-                              title: Text(
-                                task['title'],
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  decoration: task['done']
-                                      ? TextDecoration.lineThrough
-                                      : TextDecoration.none,
+
+                              // Styles für die Checkboxes
+                              child: ListTile(
+                                trailing: Transform.scale(
+                                  scale: 1.3,
+                                  child: Checkbox(
+                                    value: task['done'],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadiusGeometry.circular(4),
+                                    ),
+                                    side: BorderSide(
+                                      color: viewModel.colorDark,
+                                      width: 2,
+                                    ),
+                                    activeColor: viewModel.colorText,
+                                    checkColor: viewModel.colorLight,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        task['done'] = newValue;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  task['title'],
+                                  style: TextStyle(
+                                    decoration: task['done']
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
                                 ),
                               ),
-                              onChanged: (newValue) {
-                                setState(() {
-                                  task['done'] = newValue;
-                                });
-                              },
                             ),
                           ),
                         );
@@ -160,7 +195,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
             floatingActionButton: FloatingActionButton(
               onPressed: () {
                 viewModel.bottomSheetBuilder(
-                  BottomSheetView(addTask: addTask),
+                  BottomSheetView(initialText: "", onSubmit: addTask),
                   context,
                 );
               },
