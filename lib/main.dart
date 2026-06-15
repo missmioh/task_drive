@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(
@@ -95,9 +97,9 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         );
                       },
 
-                      onReorder: (oldIndex, newIndex) {
+                      onReorderItem: (oldIndex, newIndex) {
                         setState(() {
-                          if (newIndex > oldIndex) newIndex -= 1;
+                          // if (newIndex > oldIndex) newIndex -= 1;
                           final task = tasks.removeAt(oldIndex);
                           tasks.insert(newIndex, task);
                         });
