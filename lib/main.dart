@@ -97,9 +97,9 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         );
                       },
 
-                      onReorder: (oldIndex, newIndex) {
+                      onReorderItem: (oldIndex, newIndex) {
                         setState(() {
-                          if (newIndex > oldIndex) newIndex -= 1;
+                          // if (newIndex > oldIndex) newIndex -= 1;
                           final task = tasks.removeAt(oldIndex);
                           tasks.insert(newIndex, task);
                         });
