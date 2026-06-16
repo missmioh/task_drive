@@ -3,8 +3,8 @@ import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
-// import 'dart:convert';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -33,9 +33,9 @@ class AddictiveTasks extends StatefulWidget {
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
   final List<Map<String, dynamic>> tasks = [
-    {'id': 'example-1', 'title': 'Beispieltask 1', 'done': false},
-    {'id': 'example-2', 'title': 'Beispieltask 2', 'done': false},
-    {'id': 'example-3', 'title': 'Beispieltask 3', 'done': false},
+    {'id': '1', 'title': 'Beispieltask 1', 'done': false},
+    {'id': '2', 'title': 'Beispieltask 2', 'done': false},
+    {'id': '3', 'title': 'Beispieltask 3', 'done': false},
   ];
 
   // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
@@ -52,9 +52,9 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
   // Funktionen
 
   //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
-  String createTaskId() {
-    return DateTime.now().microsecondsSinceEpoch.toString();
-  }
+  // String createTaskId() {
+  //   return DateTime.now().microsecondsSinceEpoch.toString();
+  // }
 
   // Speichert die aktuelle Task-Liste auf dem Gerät.
   Future<void> saveTasks() async {
@@ -107,7 +107,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
     setState(() {
       tasks.insert(0, {
-        'id': createTaskId(),
+        'id': DateTime.now().microsecondsSinceEpoch,
         'title': title.trim(),
         'done': false,
       });
@@ -139,6 +139,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
   // Variables
 
+  //UI-Auswahl
   int? selectedID;
 
   // Oberfläche
@@ -200,6 +201,9 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                       itemBuilder: (context, index) {
                         final task = tasks[index];
 
+                        debugPrint("Task: ${task['title']} ID: ${task['id']}");
+                        debugPrint("Active: ${viewModel.activeTaskId}");
+
                         return Dismissible(
                           key: ValueKey(task['id']),
                           onDismissed: (direction) {
@@ -246,7 +250,12 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             },
 
                             child: Card(
-                              color: viewModel.colorMedium,
+                              key: ValueKey(task['title']),
+                              color: viewModel.activeTaskId == task['id']
+                                  ? viewModel.colorAccent1.withValues(
+                                      alpha: 0.3,
+                                    )
+                                  : viewModel.colorMedium,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
                               shape: RoundedRectangleBorder(

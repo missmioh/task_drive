@@ -8,6 +8,8 @@ import 'package:flutter/foundation.dart';
 //notification service
 
 class NotificationService {
+  static const int reminderNotificationId = 1;
+
   final FlutterLocalNotificationsPlugin notifications =
       FlutterLocalNotificationsPlugin();
 
@@ -35,7 +37,6 @@ class NotificationService {
   }
 
   Future<void> scheduleReminder({
-    required int id,
     required String title,
     required int minutes,
   }) async {
@@ -54,7 +55,7 @@ class NotificationService {
     ).add(Duration(minutes: minutes));
 
     await notifications.zonedSchedule(
-      id: id,
+      id: reminderNotificationId,
       title: '⏰ Erinnerung',
       body: title,
       scheduledDate: scheduledTime,
@@ -90,7 +91,7 @@ class NotificationService {
   }
 
   Future<void> scheduleTestNotification() async {
-    await scheduleReminder(id: 1, title: 'Test Notification', minutes: 1);
+    await scheduleReminder(title: 'Test Notification', minutes: 1);
     debugPrint('Test Benachrichtigung wurde ausgelöst');
   }
 }

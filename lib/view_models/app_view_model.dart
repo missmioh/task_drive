@@ -18,6 +18,12 @@ import 'package:todo_app/models/notification_service.dart';
 class AppViewModel extends ChangeNotifier {
   // List<Task> tasks = <Task>[];
 
+  int? activeTaskId;
+
+  void setActiveTask(int id) {
+    activeTaskId = id;
+    notifyListeners();
+  }
   // Zufallsminuten-Generator
 
   int createRandomReminderMinutes() {
@@ -33,11 +39,15 @@ class AppViewModel extends ChangeNotifier {
 
     debugPrint("Reminder für '${task['title']}' in $minutes Minuten");
 
+    final id = task['id'] ?? task['title'].hashCode;
+
     await notificationService.scheduleReminder(
-      id: task['id'] ?? task['title'].hashCode,
       title: task['title'],
       minutes: minutes,
     );
+    debugPrint("SET ACTIVE TASK ID: $id");
+    activeTaskId = id;
+    notifyListeners();
   }
 
   // Farb-Schemata
