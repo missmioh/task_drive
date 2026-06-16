@@ -28,20 +28,26 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     {'title': 'Beispieltask 3', 'done': false},
   ];
 
+  // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
   static const String tasksStorageKey = 'tasks';
 
   @override
   void initState() {
     super.initState();
+
+    // Bereits gespeicherte Tasks laden, sobald das Widget erstellt wird.
     loadTasks();
   }
 
   // Funktionen
 
+  // Speichert die aktuelle Task-Liste auf dem Gerät.
   Future<void> saveTasks() async {
     final SharedPreferences preferences =
-        await SharedPreferences.getInstance(); // öffnet lokalen Speicher
+        await SharedPreferences.getInstance(); // öffnet lokalen Speicher.
 
+    // SharedPreferences kann keine List<Map> direkt speichern.
+    // Deshalb wird die Task-Liste in einen JSON-String umgewandelt.
     final String tasksAsJson = jsonEncode(tasks); // wandelt Liste als String um
 
     await preferences.setString(
@@ -50,25 +56,31 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     ); // speichert den Sting
   }
 
+  // Lädt zuvor gespeicherte Task-Liste vom Gerät.
   Future<void> loadTasks() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
 
     final String? tasksAsJson = preferences.getString(tasksStorageKey);
 
+    // Beim ersten App-Start gibt es noch keine gespeicherten Tasks.
+    // In dem Fall bleiben die Beispiel-Tasks bestehen.
     if (tasksAsJson == null) {
       return;
     }
-
+    // Den gespeicherten JSON-String wieder in Dart-Liste umwandeln.
     final List<dynamic> decodedTasks = jsonDecode(tasksAsJson);
 
+    // Die einzelnen Listen-Elemente wieder in Task-Maps umwandeln.
     final List<Map<String, dynamic>> loadedTasks = decodedTasks.map((task) {
       return Map<String, dynamic>.from(task);
     }).toList();
 
+    // Nach asynchronem Vorgang prüfen, ob das Widget noch existiert.
     if (!mounted) {
       return;
     }
 
+    //Beispiel-Tasks durch die gespeicherten Tasks ersetzen.
     setState(() {
       tasks.clear();
       tasks.addAll(loadedTasks);
@@ -82,6 +94,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
       tasks.insert(0, {'title': title.trim(), 'done': false});
     });
 
+    // Geänderten Zustand dauerhaft speichern
     saveTasks();
   }
 
@@ -90,6 +103,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
       tasks.removeAt(taskIndex);
     });
 
+    // Geänderten Zustand dauerhaft speichern
     saveTasks();
   }
 
@@ -100,6 +114,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
       tasks[index]['title'] = newTitle.trim();
     });
 
+    // Geänderten Zustand dauerhaft speichern
     saveTasks();
   }
 
@@ -155,6 +170,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           tasks.insert(newIndex, task);
                         });
 
+                        // speichert die neue Reihenfolge der Tasks.
                         saveTasks();
                       },
 
@@ -164,6 +180,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         return Dismissible(
                           key: ValueKey(task['title']),
                           onDismissed: (direction) {
+                            // aktualisiert die Oberfläche und speichert die Liste
                             deleteTask(index);
                           },
                           background: Container(
@@ -224,6 +241,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         task['done'] = newValue ?? false;
                                       });
 
+                                      // Erledigt-Staus speichern.
                                       saveTasks();
                                     },
                                   ),
