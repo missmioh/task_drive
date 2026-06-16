@@ -23,9 +23,9 @@ class AddictiveTasks extends StatefulWidget {
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
   final List<Map<String, dynamic>> tasks = [
-    {'title': 'Beispieltask 1', 'done': false},
-    {'title': 'Beispieltask 2', 'done': false},
-    {'title': 'Beispieltask 3', 'done': false},
+    {'id': 'example-1', 'title': 'Beispieltask 1', 'done': false},
+    {'id': 'example-2', 'title': 'Beispieltask 2', 'done': false},
+    {'id': 'example-3', 'title': 'Beispieltask 3', 'done': false},
   ];
 
   // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
@@ -40,6 +40,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
   }
 
   // Funktionen
+
+  //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
+  String createTaskId() {
+    return DateTime.now().microsecondsSinceEpoch.toString();
+  }
 
   // Speichert die aktuelle Task-Liste auf dem Gerät.
   Future<void> saveTasks() async {
@@ -91,7 +96,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     if (title.trim().isEmpty) return;
 
     setState(() {
-      tasks.insert(0, {'title': title.trim(), 'done': false});
+      tasks.insert(0, {
+        'id': createTaskId(),
+        'title': title.trim(),
+        'done': false,
+      });
     });
 
     // Geänderten Zustand dauerhaft speichern
@@ -178,7 +187,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         final task = tasks[index];
 
                         return Dismissible(
-                          key: ValueKey(task['title']),
+                          key: ValueKey(task['id']),
                           onDismissed: (direction) {
                             // aktualisiert die Oberfläche und speichert die Liste
                             deleteTask(index);
@@ -212,7 +221,6 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             },
 
                             child: Card(
-                              key: ValueKey(task['title']),
                               color: viewModel.colorMedium,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
