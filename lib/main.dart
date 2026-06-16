@@ -297,7 +297,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     final notificationService = context
                         .read<NotificationService>();
 
-                    await notificationService.showTestNotification();
+                    await notificationService.scheduleTestNotification();
                   },
                   child: const Icon(Icons.notifications),
                 ),
@@ -305,6 +305,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 const SizedBox(height: 12),
 
                 FloatingActionButton(
+                  heroTag: "add_task",
                   onPressed: () {
                     viewModel.bottomSheetBuilder(
                       BottomSheetView(initialText: "", onSubmit: addTask),
