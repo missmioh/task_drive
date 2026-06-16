@@ -5,6 +5,8 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/foundation.dart';
 
+//notification service
+
 class NotificationService {
   final FlutterLocalNotificationsPlugin notifications =
       FlutterLocalNotificationsPlugin();
@@ -32,8 +34,37 @@ class NotificationService {
     await androidPlugin?.requestNotificationsPermission();
   }
 
+  Future<void> scheduleReminder({
+    required int id,
+    required String title,
+    required int minutes,
+  }) async {
+    final androidDetails = AndroidNotificationDetails(
+      'test_channel',
+      'Test Notifications',
+      channelDescription: 'Geplante Erinnerungen',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    final details = NotificationDetails(android: androidDetails);
+
+    final scheduledTime = tz.TZDateTime.now(
+      tz.local,
+    ).add(Duration(minutes: minutes));
+
+    await notifications.zonedSchedule(
+      id: id,
+      title: '⏰ Erinnerung',
+      body: title,
+      scheduledDate: scheduledTime,
+      notificationDetails: details,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+    );
+  }
+
   Future<void> showTestNotification() async {
-    print("showTestNotification wurde aufgerufen");
+    debugPrint("showTestNotification wurde aufgerufen");
     const androidDetails = AndroidNotificationDetails(
       'test_channel',
       'Test Notifications',
@@ -52,39 +83,14 @@ class NotificationService {
         notificationDetails: details,
       );
 
-      print("notifications.show() wurde erfolgreich aufgerufen");
+      debugPrint("notifications.show() wurde erfolgreich aufgerufen");
     } catch (e) {
-      print("Fehler beim Anzeigen der Notification: $e");
+      debugPrint("Fehler beim Anzeigen der Notification: $e");
     }
   }
 
   Future<void> scheduleTestNotification() async {
-    const androidDetails = AndroidNotificationDetails(
-      'test_channel',
-      'Test Notifications',
-      channelDescription: 'Zum Testen lokaler Benachrichtigungen',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-
-    const details = NotificationDetails(android: androidDetails);
-
-    final scheduledTime = tz.TZDateTime.now(
-      tz.local,
-    ).add(const Duration(seconds: 10));
-
-    try {
-      await notifications.zonedSchedule(
-        id: 1,
-        title: '⏰ Geplante Erinnerung',
-        body: 'Diese Notification wurde vor 10 Sekunden geplant.',
-        scheduledDate: scheduledTime,
-        notificationDetails: details,
-        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-      );
-      debugPrint("Scheduling erfolgreich");
-    } catch (e) {
-      debugPrint("Scheduling FEHLER: $e");
-    }
+    await scheduleReminder(id: 1, title: 'Test Notification', minutes: 1);
+    debugPrint('Test Benachrichtigung wurde ausgelöst');
   }
 }

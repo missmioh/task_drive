@@ -1,18 +1,44 @@
 // Ablageort für Funktionen und Farben
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:todo_app/models/notification_service.dart';
 
 // Notwendig für Task-Speicherung im Cache
+// wird zurzeit nicht genutzt
 
-class Task {
-  String title;
-  bool complete;
+// class Task {
+//   String title;
+//   bool complete;
 
-  Task(this.title, this.complete);
-}
+//   Task(this.title, this.complete);
+// }
 
 class AppViewModel extends ChangeNotifier {
-  List<Task> tasks = <Task>[];
+  // List<Task> tasks = <Task>[];
+
+  // Zufallsminuten-Generator
+
+  int createRandomReminderMinutes() {
+    final random = Random();
+    return random.nextInt(41) + 5;
+  }
+
+  Future<void> startReminderForTask(
+    Map<String, dynamic> task,
+    NotificationService notificationService,
+  ) async {
+    final minutes = createRandomReminderMinutes();
+
+    debugPrint("Reminder für '${task['title']}' in $minutes Minuten");
+
+    await notificationService.scheduleReminder(
+      id: task['id'] ?? task['title'].hashCode,
+      title: task['title'],
+      minutes: minutes,
+    );
+  }
 
   // Farb-Schemata
 

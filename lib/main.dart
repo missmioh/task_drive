@@ -3,8 +3,8 @@ import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'dart:convert';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -231,6 +231,17 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                   },
                                 ),
                                 context,
+                              );
+                            },
+
+                            onDoubleTap: () async {
+                              final viewModel = context.read<AppViewModel>();
+                              final notificationService = context
+                                  .read<NotificationService>();
+
+                              await viewModel.startReminderForTask(
+                                task,
+                                notificationService,
                               );
                             },
 
