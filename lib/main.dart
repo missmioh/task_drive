@@ -312,6 +312,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 FloatingActionButton(
+                  // wird später durch Abbruch-Button ersetzt
                   heroTag: "notification_test",
                   onPressed: () async {
                     final notificationService = context

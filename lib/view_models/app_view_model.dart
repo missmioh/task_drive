@@ -35,11 +35,17 @@ class AppViewModel extends ChangeNotifier {
     Map<String, dynamic> task,
     NotificationService notificationService,
   ) async {
+    debugPrint("Task: ${task['title']}");
+    debugPrint("ID: ${task['id']}");
     final minutes = createRandomReminderMinutes();
 
     debugPrint("Reminder für '${task['title']}' in $minutes Minuten");
 
     final id = task['id'] ?? task['title'].hashCode;
+
+    if (activeTaskId != null) {
+      await notificationService.cancelReminder();
+    }
 
     await notificationService.scheduleReminder(
       title: task['title'],

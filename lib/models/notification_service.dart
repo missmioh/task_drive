@@ -64,6 +64,12 @@ class NotificationService {
     );
   }
 
+  Future<void> cancelReminder() async {
+    await notifications.cancel(id: reminderNotificationId);
+  }
+
+  //for debugging
+
   Future<void> showTestNotification() async {
     debugPrint("showTestNotification wurde aufgerufen");
     const androidDetails = AndroidNotificationDetails(
