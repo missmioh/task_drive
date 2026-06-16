@@ -28,7 +28,52 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     {'title': 'Beispieltask 3', 'done': false},
   ];
 
+  static const String tasksStorageKey = 'tasks';
+
+  @override
+  void initState() {
+    super.initState();
+    loadTasks();
+  }
+
   // Funktionen
+
+  Future<void> saveTasks() async {
+    final SharedPreferences preferences =
+        await SharedPreferences.getInstance(); // öffnet lokalen Speicher
+
+    final String tasksAsJson = jsonEncode(tasks); // wandelt Liste als String um
+
+    await preferences.setString(
+      tasksStorageKey,
+      tasksAsJson,
+    ); // speichert den Sting
+  }
+
+  Future<void> loadTasks() async {
+    final SharedPreferences preferences = await SharedPreferences.getInstance();
+
+    final String? tasksAsJson = preferences.getString(tasksStorageKey);
+
+    if (tasksAsJson == null) {
+      return;
+    }
+
+    final List<dynamic> decodedTasks = jsonDecode(tasksAsJson);
+
+    final List<Map<String, dynamic>> loadedTasks = decodedTasks.map((task) {
+      return Map<String, dynamic>.from(task);
+    }).toList();
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      tasks.clear();
+      tasks.addAll(loadedTasks);
+    });
+  }
 
   void addTask(String title) {
     if (title.trim().isEmpty) return;
@@ -36,12 +81,16 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     setState(() {
       tasks.insert(0, {'title': title.trim(), 'done': false});
     });
+
+    saveTasks();
   }
 
   void deleteTask(int taskIndex) {
     setState(() {
       tasks.removeAt(taskIndex);
     });
+
+    saveTasks();
   }
 
   void editTask(int index, String newTitle) {
@@ -50,6 +99,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     setState(() {
       tasks[index]['title'] = newTitle.trim();
     });
+
+    saveTasks();
   }
 
   // Oberfläche
@@ -103,6 +154,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           final task = tasks.removeAt(oldIndex);
                           tasks.insert(newIndex, task);
                         });
+
+                        saveTasks();
                       },
 
                       itemBuilder: (context, index) {
@@ -111,9 +164,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         return Dismissible(
                           key: ValueKey(task['title']),
                           onDismissed: (direction) {
-                            setState(() {
-                              deleteTask(index);
-                            });
+                            deleteTask(index);
                           },
                           background: Container(
                             margin: EdgeInsets.symmetric(horizontal: 5),
@@ -170,8 +221,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     checkColor: viewModel.colorLight,
                                     onChanged: (newValue) {
                                       setState(() {
-                                        task['done'] = newValue;
+                                        task['done'] = newValue ?? false;
                                       });
+
+                                      saveTasks();
                                     },
                                   ),
                                 ),
