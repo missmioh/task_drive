@@ -15,5 +15,39 @@ class NotificationService {
     );
 
     await notifications.initialize(settings: initSettings);
+
+    // nach Berechtigung für Push-Benachrichtigungen fragen
+    final androidPlugin = notifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+
+    await androidPlugin?.requestNotificationsPermission();
+  }
+
+  Future<void> showTestNotification() async {
+    print("showTestNotification wurde aufgerufen");
+    const androidDetails = AndroidNotificationDetails(
+      'test_channel',
+      'Test Notifications',
+      channelDescription: 'Zum Testen lokaler Benachrichtigungen',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const details = NotificationDetails(android: androidDetails);
+
+    try {
+      await notifications.show(
+        id: 0,
+        title: 'Hallo! 👋',
+        body: 'Wenn du das siehst, funktioniert alles.',
+        notificationDetails: details,
+      );
+
+      print("notifications.show() wurde erfolgreich aufgerufen");
+    } catch (e) {
+      print("Fehler beim Anzeigen der Notification: $e");
+    }
   }
 }

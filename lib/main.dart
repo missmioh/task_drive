@@ -288,15 +288,33 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               ],
             ),
 
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                viewModel.bottomSheetBuilder(
-                  BottomSheetView(initialText: "", onSubmit: addTask),
-                  context,
-                );
-              },
-              backgroundColor: viewModel.colorDarkest,
-              child: Icon(Icons.add),
+            floatingActionButton: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  heroTag: "notification_test",
+                  onPressed: () async {
+                    final notificationService = context
+                        .read<NotificationService>();
+
+                    await notificationService.showTestNotification();
+                  },
+                  child: const Icon(Icons.notifications),
+                ),
+
+                const SizedBox(height: 12),
+
+                FloatingActionButton(
+                  onPressed: () {
+                    viewModel.bottomSheetBuilder(
+                      BottomSheetView(initialText: "", onSubmit: addTask),
+                      context,
+                    );
+                  },
+                  backgroundColor: viewModel.colorDarkest,
+                  child: Icon(Icons.add),
+                ),
+              ],
             ),
           );
         },
