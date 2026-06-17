@@ -377,7 +377,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                               key: ValueKey(task['title']),
 
                               color: viewModel.activeTaskId == task['id']
-                                  ? viewModel.colorAccent1.withValues(
+                                  ? viewModel.colorDarkest.withValues(
                                       alpha: 0.3,
                                     )
                                   : viewModel.colorLight,
@@ -449,7 +449,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                     await notificationService.scheduleTestNotification();
                   },
-                  child: const Icon(Icons.notifications),
+                  backgroundColor: viewModel.colorText,
+                  child: Icon(
+                    Icons.timer_off_outlined,
+                    color: viewModel.colorLight,
+                  ),
                 ),
 
                 const SizedBox(height: 12),
@@ -462,8 +466,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                       context,
                     );
                   },
-                  backgroundColor: viewModel.colorDarkest,
-                  child: Icon(Icons.add),
+                  backgroundColor: viewModel.colorText,
+                  child: Icon(Icons.add, color: viewModel.colorLight),
                 ),
               ],
             ),
