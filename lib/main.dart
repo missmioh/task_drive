@@ -51,6 +51,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
   // Funktionen
 
+  //gesamtzahl aller Tasks
+  int get numTasks => tasks.length;
+
+  //Anzahl aller Tasks, die noch nicht erledigt sind
+  int get numTasksRemaining {
+    return tasks.where((task) => task['done'] != true).length;
+  }
+
   //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
   // String createTaskId() {
   //   return DateTime.now().microsecondsSinceEpoch.toString();
@@ -166,8 +174,42 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 // Infos über die Tasks (z.B. wie viele übrig sind)
                 // Könnte aber auch für die Kategorien-Unterseite sein
                 Expanded(
-                  flex: 1,
-                  child: Container(color: viewModel.colorMedium),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: viewModel.colorLight,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Center(
+                            child: Text(
+                              '$numTasksRemaining',
+                              style: TextStyle(
+                                fontSize: 28,
+                                color: viewModel.colorText,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              'Remaining Tasks',
+                              style: TextStyle(
+                                color: viewModel.colorText,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
 
                 // Ansicht der Listen-Elemente
