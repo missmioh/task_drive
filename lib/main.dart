@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -160,8 +161,26 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
+              toolbarHeight: 90,
+              leadingWidth: 100,
+              centerTitle: false,
+              titleSpacing: 0,
               backgroundColor: viewModel.colorDarkest,
-              title: const Text('Addictive Tasks'),
+              leading: Padding(
+                padding: const EdgeInsets.all(3),
+                child: Image.asset(
+                  'assets/images/logo_freigestellt.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              title: Text(
+                'Task Drive',
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.luckiestGuy(
+                  fontSize: 40,
+                  color: viewModel.colorLight,
+                ),
+              ),
             ),
             body: Column(
               children: [

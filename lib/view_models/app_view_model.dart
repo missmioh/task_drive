@@ -58,11 +58,11 @@ class AppViewModel extends ChangeNotifier {
 
   // Farb-Schemata
 
-  Color colorLight = Colors.amber.shade100;
-  Color colorMedium = Colors.amber.shade200;
-  Color colorDark = Colors.amber.shade300;
-  Color colorDarkest = Colors.amber.shade600;
-  Color get colorText => const Color.fromARGB(255, 163, 116, 6);
+  Color colorLight = const Color.fromARGB(255, 244, 227, 183);
+  Color colorMedium = const Color.fromARGB(255, 186, 214, 182);
+  Color colorDark = const Color.fromARGB(255, 166, 209, 204);
+  Color colorDarkest = const Color.fromARGB(255, 126, 160, 186);
+  Color get colorText => const Color.fromARGB(255, 102, 107, 133);
   Color get colorAccent1 => const Color.fromARGB(179, 192, 9, 6);
   Color get colorAccent2 => const Color.fromARGB(255, 141, 41, 5);
 
