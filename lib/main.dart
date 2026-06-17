@@ -416,9 +416,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 ),
                                 title: Text(
                                   task['title'],
-                                  style: GoogleFonts.concertOne(
+                                  style: GoogleFonts.nunito(
                                     textStyle: TextStyle(
                                       fontSize: 20,
+                                      fontWeight: FontWeight(600),
                                       color: viewModel.colorText,
                                       decoration: task['done']
                                           ? TextDecoration.lineThrough
