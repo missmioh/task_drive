@@ -188,7 +188,21 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 // header, wo z.B. User-Daten stehen könnten
                 Expanded(
                   flex: 1,
-                  child: Container(color: viewModel.colorLight),
+                  child: Container(
+                    color: viewModel.colorDarkest,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Hello User 🐱',
+                      style: GoogleFonts.bungeeInline(
+                        textStyle: TextStyle(
+                          fontSize: 28,
+                          color: viewModel.colorText,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
 
                 // Infos über die Tasks (z.B. wie viele übrig sind)
@@ -196,7 +210,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 Expanded(
                   flex: 1,
                   child: Container(
-                    color: viewModel.colorMedium,
+                    color: viewModel.colorDark,
                     padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                     child: Row(
                       children: [
@@ -205,6 +219,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: viewModel.colorLight,
+                              border: Border.all(
+                                color: viewModel.colorText,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -215,10 +233,12 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         '$numTasks',
-                                        style: TextStyle(
-                                          fontSize: 28,
-                                          color: viewModel.colorText,
-                                          fontWeight: FontWeight.bold,
+                                        style: GoogleFonts.nunito(
+                                          textStyle: TextStyle(
+                                            fontSize: 28,
+                                            color: viewModel.colorText,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -231,9 +251,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         'Total Tasks',
-                                        style: TextStyle(
-                                          color: viewModel.colorText,
-                                          fontWeight: FontWeight.w600,
+                                        style: GoogleFonts.bungeeInline(
+                                          textStyle: TextStyle(
+                                            color: viewModel.colorText,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -251,6 +273,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: viewModel.colorLight,
+                              border: Border.all(
+                                color: viewModel.colorText,
+                                width: 2,
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -261,10 +287,12 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         '$numTasksRemaining',
-                                        style: TextStyle(
-                                          fontSize: 28,
-                                          color: viewModel.colorText,
-                                          fontWeight: FontWeight.bold,
+                                        style: GoogleFonts.nunito(
+                                          textStyle: TextStyle(
+                                            fontSize: 28,
+                                            color: viewModel.colorText,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -277,9 +305,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         'Remaining Tasks',
-                                        style: TextStyle(
-                                          color: viewModel.colorText,
-                                          fontWeight: FontWeight.w600,
+                                        style: GoogleFonts.bungeeInline(
+                                          textStyle: TextStyle(
+                                            color: viewModel.colorText,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -298,7 +328,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 Expanded(
                   flex: 7,
                   child: Container(
-                    color: viewModel.colorDark,
+                    color: viewModel.colorMedium,
                     child: ReorderableListView.builder(
                       padding: const EdgeInsets.all(12),
                       itemCount: tasks.length,
@@ -383,9 +413,13 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                   : viewModel.colorLight,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
+                              // shape: RoundedRectangleBorder(
+                              //   borderRadius: BorderRadius.circular(16),
+                              //   side: BorderSide(
+                              //     color: viewModel.colorText,
+                              //     width: 0.5,
+                              //   ),
+                              // ),
 
                               // Styles für die Checkboxes
                               child: ListTile(
@@ -399,10 +433,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                           BorderRadiusGeometry.circular(4),
                                     ),
                                     side: BorderSide(
-                                      color: viewModel.colorDark,
+                                      color: viewModel.colorDarkest,
                                       width: 2,
                                     ),
-                                    activeColor: viewModel.colorText,
+                                    activeColor: viewModel.colorDarkest,
                                     checkColor: viewModel.colorLight,
                                     onChanged: (newValue) {
                                       setState(() {
@@ -416,10 +450,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 ),
                                 title: Text(
                                   task['title'],
-                                  style: GoogleFonts.nunito(
+                                  style: GoogleFonts.alatsi(
                                     textStyle: TextStyle(
                                       fontSize: 20,
-                                      fontWeight: FontWeight(600),
+                                      fontWeight: FontWeight(400),
                                       color: viewModel.colorText,
                                       decoration: task['done']
                                           ? TextDecoration.lineThrough
@@ -451,6 +485,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     await notificationService.scheduleTestNotification();
                   },
                   backgroundColor: viewModel.colorText,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: viewModel.colorLight, width: 2),
+                  ),
                   child: Icon(
                     Icons.timer_off_outlined,
                     color: viewModel.colorLight,
@@ -468,6 +506,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     );
                   },
                   backgroundColor: viewModel.colorText,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: viewModel.colorLight, width: 2),
+                  ),
                   child: Icon(Icons.add, color: viewModel.colorLight),
                 ),
               ],
