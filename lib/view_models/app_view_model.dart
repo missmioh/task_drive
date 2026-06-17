@@ -63,8 +63,8 @@ class AppViewModel extends ChangeNotifier {
   Color colorDark = const Color.fromARGB(255, 166, 209, 204);
   Color colorDarkest = const Color.fromARGB(255, 126, 160, 186);
   Color get colorText => const Color.fromARGB(255, 102, 107, 133);
-  Color get colorAccent1 => const Color.fromARGB(179, 192, 9, 6);
-  Color get colorAccent2 => const Color.fromARGB(255, 141, 41, 5);
+  Color get colorAccent1 => const Color.fromARGB(168, 219, 164, 147);
+  Color get colorAccent2 => const Color.fromARGB(255, 166, 108, 88);
 
   // Bottom-Sheet, der über die ganze App konstant verwendet wird
 

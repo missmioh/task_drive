@@ -165,7 +165,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               leadingWidth: 100,
               centerTitle: false,
               titleSpacing: 0,
-              backgroundColor: viewModel.colorDarkest,
+              backgroundColor: viewModel.colorText,
               leading: Padding(
                 padding: const EdgeInsets.all(3),
                 child: Image.asset(
@@ -176,8 +176,9 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               title: Text(
                 'Task Drive',
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.luckiestGuy(
+                style: GoogleFonts.bungeeShade(
                   fontSize: 40,
+                  fontWeight: FontWeight(600),
                   color: viewModel.colorLight,
                 ),
               ),
@@ -374,11 +375,12 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                             child: Card(
                               key: ValueKey(task['title']),
+
                               color: viewModel.activeTaskId == task['id']
                                   ? viewModel.colorAccent1.withValues(
                                       alpha: 0.3,
                                     )
-                                  : viewModel.colorMedium,
+                                  : viewModel.colorLight,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
                               shape: RoundedRectangleBorder(
@@ -414,10 +416,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 ),
                                 title: Text(
                                   task['title'],
-                                  style: TextStyle(
-                                    decoration: task['done']
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
+                                  style: GoogleFonts.concertOne(
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      color: viewModel.colorText,
+                                      decoration: task['done']
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                    ),
                                   ),
                                 ),
                               ),
