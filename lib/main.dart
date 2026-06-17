@@ -335,10 +335,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             deleteTask(index);
                           },
                           background: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            margin: EdgeInsets.fromLTRB(5, 0, 5, 12),
                             decoration: BoxDecoration(
                               color: viewModel.colorAccent1,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             child: Center(
                               child: Icon(
