@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -160,8 +161,27 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: viewModel.colorDarkest,
-              title: const Text('Addictive Tasks'),
+              toolbarHeight: 90,
+              leadingWidth: 100,
+              centerTitle: false,
+              titleSpacing: 0,
+              backgroundColor: viewModel.colorText,
+              leading: Padding(
+                padding: const EdgeInsets.all(3),
+                child: Image.asset(
+                  'assets/images/logo_freigestellt.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              title: Text(
+                'Task Drive',
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.bungeeShade(
+                  fontSize: 40,
+                  fontWeight: FontWeight(600),
+                  color: viewModel.colorLight,
+                ),
+              ),
             ),
             body: Column(
               children: [
@@ -315,10 +335,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             deleteTask(index);
                           },
                           background: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            margin: EdgeInsets.fromLTRB(5, 0, 5, 12),
                             decoration: BoxDecoration(
                               color: viewModel.colorAccent1,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(16),
                             ),
                             child: Center(
                               child: Icon(
@@ -355,11 +375,12 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                             child: Card(
                               key: ValueKey(task['title']),
+
                               color: viewModel.activeTaskId == task['id']
-                                  ? viewModel.colorAccent1.withValues(
+                                  ? viewModel.colorDarkest.withValues(
                                       alpha: 0.3,
                                     )
-                                  : viewModel.colorMedium,
+                                  : viewModel.colorLight,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
                               shape: RoundedRectangleBorder(
@@ -395,10 +416,15 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 ),
                                 title: Text(
                                   task['title'],
-                                  style: TextStyle(
-                                    decoration: task['done']
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
+                                  style: GoogleFonts.nunito(
+                                    textStyle: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight(600),
+                                      color: viewModel.colorText,
+                                      decoration: task['done']
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -424,7 +450,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                     await notificationService.scheduleTestNotification();
                   },
-                  child: const Icon(Icons.notifications),
+                  backgroundColor: viewModel.colorText,
+                  child: Icon(
+                    Icons.timer_off_outlined,
+                    color: viewModel.colorLight,
+                  ),
                 ),
 
                 const SizedBox(height: 12),
@@ -437,8 +467,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                       context,
                     );
                   },
-                  backgroundColor: viewModel.colorDarkest,
-                  child: Icon(Icons.add),
+                  backgroundColor: viewModel.colorText,
+                  child: Icon(Icons.add, color: viewModel.colorLight),
                 ),
               ],
             ),
