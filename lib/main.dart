@@ -51,6 +51,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
   // Funktionen
 
+  //gesamtzahl aller Tasks
+  int get numTasks => tasks.length;
+
+  //Anzahl aller Tasks, die noch nicht erledigt sind
+  int get numTasksRemaining {
+    return tasks.where((task) => task['done'] != true).length;
+  }
+
   //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
   // String createTaskId() {
   //   return DateTime.now().microsecondsSinceEpoch.toString();
@@ -167,7 +175,103 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                 // Könnte aber auch für die Kategorien-Unterseite sein
                 Expanded(
                   flex: 1,
-                  child: Container(color: viewModel.colorMedium),
+                  child: Container(
+                    color: viewModel.colorMedium,
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    child: Row(
+                      children: [
+                        // Übersicht: Gesamtzahl aller Tasks
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: viewModel.colorLight,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Center(
+                                    child: FittedBox(
+                                      child: Text(
+                                        '$numTasks',
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: FittedBox(
+                                      child: Text(
+                                        'Total Tasks',
+                                        style: TextStyle(
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(width: 20),
+
+                        // Übersicht: Anzahl der noch offenen Tasks
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: viewModel.colorLight,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Center(
+                                    child: FittedBox(
+                                      child: Text(
+                                        '$numTasksRemaining',
+                                        style: TextStyle(
+                                          fontSize: 28,
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
+                                    child: FittedBox(
+                                      child: Text(
+                                        'Remaining Tasks',
+                                        style: TextStyle(
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
 
                 // Ansicht der Listen-Elemente
