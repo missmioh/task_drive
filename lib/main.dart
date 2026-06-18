@@ -4,6 +4,7 @@ import 'package:todo_app/view_models/app_view_model.dart';
 import 'package:todo_app/models/task_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
+import 'package:todo_app/views/reward_area.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -58,7 +59,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
           return Scaffold(
             appBar: AppBar(
               toolbarHeight: 90,
-              leadingWidth: 100,
+              leadingWidth: 130,
               centerTitle: false,
               titleSpacing: 0,
               backgroundColor: viewModel.colorText,
