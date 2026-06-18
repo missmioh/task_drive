@@ -388,8 +388,6 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                             },
 
                             child: Card(
-                              key: ValueKey(task['title']),
-
                               color: viewModel.activeTaskId == task['id']
                                   ? viewModel.colorDarkest.withValues(
                                       alpha: 0.3,
