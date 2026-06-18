@@ -387,17 +387,6 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                               );
                             },
 
-                            onDoubleTap: () async {
-                              final viewModel = context.read<AppViewModel>();
-                              final notificationService = context
-                                  .read<NotificationService>();
-
-                              await viewModel.startReminderForTask(
-                                task,
-                                notificationService,
-                              );
-                            },
-
                             child: Card(
                               key: ValueKey(task['title']),
 
@@ -412,30 +401,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                               // Styles für die Checkboxes
                               child: ListTile(
                                 selected: selectedID == task['id'],
-                                trailing: Transform.scale(
-                                  scale: 1.3,
-                                  child: Checkbox(
-                                    value: task['done'],
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadiusGeometry.circular(4),
-                                    ),
-                                    side: BorderSide(
-                                      color: viewModel.colorDarkest,
-                                      width: 2,
-                                    ),
-                                    activeColor: viewModel.colorDarkest,
-                                    checkColor: viewModel.colorLight,
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        task['done'] = newValue ?? false;
-                                      });
-
-                                      // Erledigt-Staus speichern.
-                                      saveTasks();
-                                    },
-                                  ),
+                                contentPadding: const EdgeInsets.only(
+                                  left: 16,
+                                  right: 0,
                                 ),
+
                                 title: Text(
                                   task['title'],
                                   style: TextStyle(
@@ -447,6 +417,66 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
                                   ),
+                                ),
+
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Transform.scale(
+                                      scale: 1.3,
+                                      child: Checkbox(
+                                        value: task['done'],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
+                                        ),
+                                        side: BorderSide(
+                                          color: viewModel.colorDarkest,
+                                          width: 2,
+                                        ),
+                                        activeColor: viewModel.colorDarkest,
+                                        checkColor: viewModel.colorLight,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            task['done'] = newValue ?? false;
+                                          });
+
+                                          // Erledigt-Status speichern
+                                          saveTasks();
+                                        },
+                                      ),
+                                    ),
+
+                                    // Startet für diesen Task einen zufälligen Timer
+                                    SizedBox(
+                                      width: 48,
+                                      height: 56,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () async {
+                                            final notificationService = context
+                                                .read<NotificationService>();
+
+                                            await viewModel
+                                                .startReminderForTask(
+                                                  task,
+                                                  notificationService,
+                                                );
+                                          },
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.timer_outlined,
+                                              color: viewModel.colorDarkest,
+                                              size: 28,
+                                              weight: 400,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
