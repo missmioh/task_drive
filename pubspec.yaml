@@ -92,6 +92,18 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  fonts:
+    - family: BungeeShade
+      fonts:
+        - asset: assets/fonts/BungeeShade-Regular.ttf
+    
+    - family: BungeeInline
+      fonts:
+        - asset: assets/fonts/BungeeInline-Regular.ttf
+        
+    - family: Alatsi
+      fonts:
+        - asset: assets/fonts/Alatsi-Regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

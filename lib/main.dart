@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -34,9 +33,9 @@ class AddictiveTasks extends StatefulWidget {
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
   final List<Map<String, dynamic>> tasks = [
-    {'id': '1', 'title': 'Beispieltask 1', 'done': false},
-    {'id': '2', 'title': 'Beispieltask 2', 'done': false},
-    {'id': '3', 'title': 'Beispieltask 3', 'done': false},
+    {'id': '1', 'title': 'Tick', 'done': false},
+    {'id': '2', 'title': 'Trick', 'done': false},
+    {'id': '3', 'title': 'Track', 'done': false},
   ];
 
   // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
@@ -176,7 +175,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               title: Text(
                 'Task Drive',
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.bungeeShade(
+                style: TextStyle(
+                  fontFamily: 'BungeeShade',
                   fontSize: 40,
                   fontWeight: FontWeight(600),
                   color: viewModel.colorLight,
@@ -194,12 +194,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     alignment: Alignment.center,
                     child: Text(
                       'Hello User 🐱',
-                      style: GoogleFonts.bungeeInline(
-                        textStyle: TextStyle(
-                          fontSize: 28,
-                          color: viewModel.colorText,
-                          fontWeight: FontWeight.w500,
-                        ),
+                      style: TextStyle(
+                        fontFamily: 'BungeeInline',
+                        fontSize: 28,
+                        color: viewModel.colorText,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
@@ -233,12 +232,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         '$numTasks',
-                                        style: GoogleFonts.nunito(
-                                          textStyle: TextStyle(
-                                            fontSize: 28,
-                                            color: viewModel.colorText,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                        style: TextStyle(
+                                          fontFamily: 'BungeeInline',
+                                          fontSize: 28,
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
@@ -251,11 +249,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         'Total Tasks',
-                                        style: GoogleFonts.bungeeInline(
-                                          textStyle: TextStyle(
-                                            color: viewModel.colorText,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                        style: TextStyle(
+                                          fontFamily: 'BungeeInline',
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
@@ -287,12 +284,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         '$numTasksRemaining',
-                                        style: GoogleFonts.nunito(
-                                          textStyle: TextStyle(
-                                            fontSize: 28,
-                                            color: viewModel.colorText,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                        style: TextStyle(
+                                          fontFamily: 'BungeeInline',
+                                          fontSize: 28,
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
@@ -305,11 +301,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                     child: FittedBox(
                                       child: Text(
                                         'Remaining Tasks',
-                                        style: GoogleFonts.bungeeInline(
-                                          textStyle: TextStyle(
-                                            color: viewModel.colorText,
-                                            fontWeight: FontWeight.w800,
-                                          ),
+                                        style: TextStyle(
+                                          fontFamily: 'BungeeInline',
+                                          color: viewModel.colorText,
+                                          fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
@@ -413,13 +408,6 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                   : viewModel.colorLight,
                               margin: const EdgeInsets.only(bottom: 12),
                               elevation: 3,
-                              // shape: RoundedRectangleBorder(
-                              //   borderRadius: BorderRadius.circular(16),
-                              //   side: BorderSide(
-                              //     color: viewModel.colorText,
-                              //     width: 0.5,
-                              //   ),
-                              // ),
 
                               // Styles für die Checkboxes
                               child: ListTile(
@@ -450,15 +438,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 ),
                                 title: Text(
                                   task['title'],
-                                  style: GoogleFonts.alatsi(
-                                    textStyle: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight(400),
-                                      color: viewModel.colorText,
-                                      decoration: task['done']
-                                          ? TextDecoration.lineThrough
-                                          : TextDecoration.none,
-                                    ),
+                                  style: TextStyle(
+                                    fontFamily: 'Alatsi',
+                                    fontSize: 20,
+                                    fontWeight: FontWeight(400),
+                                    color: viewModel.colorText,
+                                    decoration: task['done']
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
                                   ),
                                 ),
                               ),

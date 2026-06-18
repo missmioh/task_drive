@@ -3,7 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 // liefert Klassen und Funktionen um mit den Zeitzonen zu arbeiten
 import 'package:timezone/timezone.dart' as tz;
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 //notification service
 
@@ -46,6 +47,8 @@ class NotificationService {
       channelDescription: 'Geplante Erinnerungen',
       importance: Importance.max,
       priority: Priority.high,
+
+      color: const Color(0xFFBAD6B6),
     );
 
     final details = NotificationDetails(android: androidDetails);
@@ -56,8 +59,8 @@ class NotificationService {
 
     await notifications.zonedSchedule(
       id: reminderNotificationId,
-      title: '⏰ Erinnerung',
-      body: title,
+      title: '🎉 Ziel erreicht!',
+      body: 'Zeit für eine Pause ☕ - mit "$title" kann es gleich weitergehen.',
       scheduledDate: scheduledTime,
       notificationDetails: details,
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
