@@ -62,6 +62,7 @@ class _RewardAreaState extends State<RewardArea> {
       ),
 
       drawer: Drawer(
+        backgroundColor: viewModel.colorDark,
         child: ListView(
           children: [
             const DrawerHeader(child: Text("Menü")),
