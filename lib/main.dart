@@ -33,9 +33,9 @@ class AddictiveTasks extends StatefulWidget {
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
   final List<Map<String, dynamic>> tasks = [
-    {'id': '1', 'title': 'Tick', 'done': false},
-    {'id': '2', 'title': 'Trick', 'done': false},
-    {'id': '3', 'title': 'Track', 'done': false},
+    {'id': 1, 'title': 'Tick', 'done': false},
+    {'id': 2, 'title': 'Trick', 'done': false},
+    {'id': 3, 'title': 'Track', 'done': false},
   ];
 
   // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
