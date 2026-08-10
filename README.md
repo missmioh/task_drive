@@ -1,8 +1,8 @@
 ## Vorwort
 
-Dieses Projekt begann als Gruppenarbeit, in Vorbereitung für die Ausbildung Fachinformatiker/In für Anwendungsentwicklung.
+Dieses Projekt begann als Gruppenarbeit, in Vorbereitung für die Ausbildung als Fachinformatiker/In für Anwendungsentwicklung.
 
-**Änderungen sind bis zum 22.06.2026 daher von:**
+**Änderungen sind bis zum 22.06.2026 daher von:<br>**
 **[Oskar Nema](https://github.com/Oskar123456)<br>**
 **[Michelle Oh](https://github.com/missmioh)**
 
