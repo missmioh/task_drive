@@ -1,17 +1,46 @@
-# todo_app
+## Vorwort
 
-A new Flutter project.
+Dieses Projekt begann als Gruppenarbeit, in Vorbereitung für die Ausbildung Fachinformatiker/In für Anwendungsentwicklung.
 
-## Getting Started
+Änderungen sind bis zum 22.06.2026 daher von:
+[Oskar Nema](https://github.com/Oskar123456)
+[Michelle Oh](https://github.com/missmioh)
 
-This project is a starting point for a Flutter application.
+Seit Beendigung der Projektphase wird das Projekt von den o.g. Usern eigenständig weiterentwickelt.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+# task drive
+***
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Task Drive ist eine To-Do-App mit eingebautem Motivationssystem. Ziel des Projektes war es, bekannte Prinzipien aus der Verhaltenspsychologie mit einer klassischen Aufgabenverwaltung zu verbinden, um Lernen und Arbeiten spannender zu gestalten.
+Die App sollte für Android Geräte konzipiert sein und als ursprüngliches Betriebssystem wurde zunächst Linux eingerichtet und eingesetzt.
+
+Task Drive basiert auf zwei psychologischen Konzepten:
+
+Variable-Interval-Verstärkerplan
+Variable-Ratio-Verstärkerplan
+
+Dafür werden Aufgaben mit zufälligen Zeitintervallen kombiniert. Nutzerinnen und Nutzer arbeiten an einem ausgewählten Task, bis entweder:
+
+der zufällig gesetzte Timer abläuft oder
+die Aufgabe abgeschlossen wird.
+
+Danach wird eine Belohnung ausgeschüttet.
+
+Bis zum 22.06.2026 wurden fertigstellt: 
+
+* Aufgaben erstellen
+* Aufgaben bearbeiten
+* Aufgaben durch Wischen löschen
+* Aufgaben verschieben und verwalten
+* Zufällige Timer für Arbeitsphasen
+* Ausgewählter Task wird optisch hervorgehoben
+* Eigenes App-Icon für den Telefon-Desktop
+* Eingegebene Daten werden dauerhaft in der App gespeichert
+
+Noch hinzugefügt werden, sollen:
+
+* Timer abbrechen (der aktuelle Button dient momentan noch zu Testzwecken)
+* Automatische Belohnungsausgabe nach Abschluss einer Arbeitsphase
+* Eigene Belohnungen anlegen
+* Zufällige Auswahl von Belohnungen (z. B. Spaziergang, Schokolade oder 5 Minuten Pause)
