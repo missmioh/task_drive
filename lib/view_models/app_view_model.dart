@@ -74,6 +74,11 @@ class AppViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleTaskDone(int index, bool? newValue) {
+    tasks[index]['done'] = newValue ?? false;
+    notifyListeners();
+  }
+
   // Zufallsminuten-Generator
 
   int createRandomReminderMinutes() {

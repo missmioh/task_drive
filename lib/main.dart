@@ -354,9 +354,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         activeColor: viewModel.colorDarkest,
                                         checkColor: viewModel.colorLight,
                                         onChanged: (newValue) {
-                                          setState(() {
-                                            task['done'] = newValue ?? false;
-                                          });
+                                          viewModel.toggleTaskDone(
+                                            index,
+                                            newValue,
+                                          );
 
                                           // Erledigt-Status speichern
                                           saveTasks();
