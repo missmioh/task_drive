@@ -18,12 +18,55 @@ import 'package:todo_app/models/notification_service.dart';
 class AppViewModel extends ChangeNotifier {
   // List<Task> tasks = <Task>[];
 
+    final List<Map<String, dynamic>> tasks = [
+    {'id': 1, 'title': 'Tick', 'done': false},
+    {'id': 2, 'title': 'Trick', 'done': false},
+    {'id': 3, 'title': 'Track', 'done': false},
+  ];
+
   int? activeTaskId;
 
   void setActiveTask(int id) {
     activeTaskId = id;
     notifyListeners();
   }
+
+  // Gesamtzahl aller Tasks
+  int get numTasks => tasks.length;
+
+  // Anzahl aller Tasks, die noch nicht erledigt sind
+  int get numTasksRemaining {
+    return tasks.where((task) => task['done'] != true).length;
+  }
+
+  // Task-Management
+
+  void addTask(String title) {
+  if (title.trim().isEmpty) return;
+
+  tasks.insert(0, {
+    'id': DateTime.now().microsecondsSinceEpoch,
+    'title': title.trim(),
+    'done': false,
+  });
+
+  notifyListeners();
+  }
+
+  void deleteTask(int taskIndex) {
+  tasks.removeAt(taskIndex);
+
+  notifyListeners();
+  }
+
+  void editTask(int index, String newTitle) {
+  if (newTitle.trim().isEmpty) return;
+
+  tasks[index]['title'] = newTitle.trim();
+
+  notifyListeners();
+  }
+
   // Zufallsminuten-Generator
 
   int createRandomReminderMinutes() {
@@ -31,6 +74,8 @@ class AppViewModel extends ChangeNotifier {
     return random.nextInt(41) + 5;
   }
 
+  // Task-Reminder
+  
   Future<void> startReminderForTask(
     Map<String, dynamic> task,
     NotificationService notificationService,

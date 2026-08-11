@@ -31,17 +31,8 @@ class AddictiveTasks extends StatefulWidget {
 }
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
-  final List<Map<String, dynamic>> tasks = [
-    {'id': 1, 'title': 'Tick', 'done': false},
-    {'id': 2, 'title': 'Trick', 'done': false},
-    {'id': 3, 'title': 'Track', 'done': false},
-  ];
 
   final TaskStorageService taskStorageService = TaskStorageService();
-
-/* 
-  // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
-  static const String tasksStorageKey = 'tasks'; */
 
   @override
   void initState() {
@@ -53,19 +44,14 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
   // Funktionen
 
-  //gesamtzahl aller Tasks
-  int get numTasks => tasks.length;
-
-  //Anzahl aller Tasks, die noch nicht erledigt sind
-  int get numTasksRemaining {
-    return tasks.where((task) => task['done'] != true).length;
-  }
-
 Future<void> saveTasks() async {
-  await taskStorageService.saveTasks(tasks);
+  final viewModel = Provider.of<AppViewModel>(context, listen: false);
+  await taskStorageService.saveTasks(viewModel.tasks);
 }
 
 Future<void> loadTasks() async {
+  final viewModel = Provider.of<AppViewModel>(context, listen: false);
+
   final List<Map<String, dynamic>>? loadedTasks =
       await taskStorageService.loadTasks();
 
@@ -78,46 +64,10 @@ Future<void> loadTasks() async {
   }
 
   setState(() {
-    tasks.clear();
-    tasks.addAll(loadedTasks);
+    viewModel.tasks.clear();
+    viewModel.tasks.addAll(loadedTasks);
   });
 }
-
-
-  void addTask(String title) {
-    if (title.trim().isEmpty) return;
-
-    setState(() {
-      tasks.insert(0, {
-        'id': DateTime.now().microsecondsSinceEpoch,
-        'title': title.trim(),
-        'done': false,
-      });
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
-  }
-
-  void deleteTask(int taskIndex) {
-    setState(() {
-      tasks.removeAt(taskIndex);
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
-  }
-
-  void editTask(int index, String newTitle) {
-    if (newTitle.trim().isEmpty) return;
-
-    setState(() {
-      tasks[index]['title'] = newTitle.trim();
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
-  }
 
   // Variables
 
@@ -205,7 +155,7 @@ Future<void> loadTasks() async {
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
-                                        '$numTasks',
+                                        '${viewModel.numTasks}',
                                         style: TextStyle(
                                           fontFamily: 'BungeeInline',
                                           fontSize: 28,
@@ -257,7 +207,7 @@ Future<void> loadTasks() async {
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
-                                        '$numTasksRemaining',
+                                        '${viewModel.numTasksRemaining}',
                                         style: TextStyle(
                                           fontFamily: 'BungeeInline',
                                           fontSize: 28,
@@ -300,7 +250,7 @@ Future<void> loadTasks() async {
                     color: viewModel.colorMedium,
                     child: ReorderableListView.builder(
                       padding: const EdgeInsets.all(12),
-                      itemCount: tasks.length,
+                      itemCount: viewModel.tasks.length,
 
                       // überschreibt die Standard-Einstellung für weißen Hintergrund von Drag-Items
                       proxyDecorator: (child, index, animation) {
@@ -313,8 +263,8 @@ Future<void> loadTasks() async {
                       onReorderItem: (oldIndex, newIndex) {
                         setState(() {
                           // if (newIndex > oldIndex) newIndex -= 1;
-                          final task = tasks.removeAt(oldIndex);
-                          tasks.insert(newIndex, task);
+                          final task = viewModel.tasks.removeAt(oldIndex);
+                          viewModel.tasks.insert(newIndex, task);
                         });
 
                         // speichert die neue Reihenfolge der Tasks.
@@ -322,7 +272,7 @@ Future<void> loadTasks() async {
                       },
 
                       itemBuilder: (context, index) {
-                        final task = tasks[index];
+                        final task = viewModel.tasks[index];
 
                         debugPrint("Task: ${task['title']} ID: ${task['id']}");
                         debugPrint("Active: ${viewModel.activeTaskId}");
@@ -331,7 +281,7 @@ Future<void> loadTasks() async {
                           key: ValueKey(task['id']),
                           onDismissed: (direction) {
                             // aktualisiert die Oberfläche und speichert die Liste
-                            deleteTask(index);
+                            viewModel.deleteTask(index);
                           },
                           background: Container(
                             margin: EdgeInsets.fromLTRB(5, 0, 5, 12),
@@ -354,7 +304,7 @@ Future<void> loadTasks() async {
                                 BottomSheetView(
                                   initialText: task['title'],
                                   onSubmit: (newValue) {
-                                    editTask(index, newValue);
+                                    viewModel.editTask(index, newValue);
                                   },
                                 ),
                                 context,
@@ -490,7 +440,7 @@ Future<void> loadTasks() async {
                   heroTag: "add_task",
                   onPressed: () {
                     viewModel.bottomSheetBuilder(
-                      BottomSheetView(initialText: "", onSubmit: addTask),
+                      BottomSheetView(initialText: "", onSubmit: viewModel.addTask),
                       context,
                     );
                   },
