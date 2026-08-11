@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
+import 'package:todo_app/models/task_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
@@ -38,8 +37,11 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     {'id': 3, 'title': 'Track', 'done': false},
   ];
 
+  final TaskStorageService taskStorageService = TaskStorageService();
+
+/* 
   // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
-  static const String tasksStorageKey = 'tasks';
+  static const String tasksStorageKey = 'tasks'; */
 
   @override
   void initState() {
@@ -59,56 +61,28 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
     return tasks.where((task) => task['done'] != true).length;
   }
 
-  //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
-  // String createTaskId() {
-  //   return DateTime.now().microsecondsSinceEpoch.toString();
-  // }
+Future<void> saveTasks() async {
+  await taskStorageService.saveTasks(tasks);
+}
 
-  // Speichert die aktuelle Task-Liste auf dem Gerät.
-  Future<void> saveTasks() async {
-    final SharedPreferences preferences =
-        await SharedPreferences.getInstance(); // öffnet lokalen Speicher.
+Future<void> loadTasks() async {
+  final List<Map<String, dynamic>>? loadedTasks =
+      await taskStorageService.loadTasks();
 
-    // SharedPreferences kann keine List<Map> direkt speichern.
-    // Deshalb wird die Task-Liste in einen JSON-String umgewandelt.
-    final String tasksAsJson = jsonEncode(tasks); // wandelt Liste als String um
-
-    await preferences.setString(
-      tasksStorageKey,
-      tasksAsJson,
-    ); // speichert den Sting
+  if (loadedTasks == null) {
+    return;
   }
 
-  // Lädt zuvor gespeicherte Task-Liste vom Gerät.
-  Future<void> loadTasks() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    final String? tasksAsJson = preferences.getString(tasksStorageKey);
-
-    // Beim ersten App-Start gibt es noch keine gespeicherten Tasks.
-    // In dem Fall bleiben die Beispiel-Tasks bestehen.
-    if (tasksAsJson == null) {
-      return;
-    }
-    // Den gespeicherten JSON-String wieder in Dart-Liste umwandeln.
-    final List<dynamic> decodedTasks = jsonDecode(tasksAsJson);
-
-    // Die einzelnen Listen-Elemente wieder in Task-Maps umwandeln.
-    final List<Map<String, dynamic>> loadedTasks = decodedTasks.map((task) {
-      return Map<String, dynamic>.from(task);
-    }).toList();
-
-    // Nach asynchronem Vorgang prüfen, ob das Widget noch existiert.
-    if (!mounted) {
-      return;
-    }
-
-    //Beispiel-Tasks durch die gespeicherten Tasks ersetzen.
-    setState(() {
-      tasks.clear();
-      tasks.addAll(loadedTasks);
-    });
+  if (!mounted) {
+    return;
   }
+
+  setState(() {
+    tasks.clear();
+    tasks.addAll(loadedTasks);
+  });
+}
+
 
   void addTask(String title) {
     if (title.trim().isEmpty) return;
