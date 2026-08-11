@@ -31,7 +31,6 @@ class AddictiveTasks extends StatefulWidget {
 }
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
-
   final TaskStorageService taskStorageService = TaskStorageService();
 
   @override
@@ -44,30 +43,30 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
   // Funktionen
 
-Future<void> saveTasks() async {
-  final viewModel = Provider.of<AppViewModel>(context, listen: false);
-  await taskStorageService.saveTasks(viewModel.tasks);
-}
-
-Future<void> loadTasks() async {
-  final viewModel = Provider.of<AppViewModel>(context, listen: false);
-
-  final List<Map<String, dynamic>>? loadedTasks =
-      await taskStorageService.loadTasks();
-
-  if (loadedTasks == null) {
-    return;
+  Future<void> saveTasks() async {
+    final viewModel = Provider.of<AppViewModel>(context, listen: false);
+    await taskStorageService.saveTasks(viewModel.tasks);
   }
 
-  if (!mounted) {
-    return;
-  }
+  Future<void> loadTasks() async {
+    final viewModel = Provider.of<AppViewModel>(context, listen: false);
 
-  setState(() {
-    viewModel.tasks.clear();
-    viewModel.tasks.addAll(loadedTasks);
-  });
-}
+    final List<Map<String, dynamic>>? loadedTasks = await taskStorageService
+        .loadTasks();
+
+    if (loadedTasks == null) {
+      return;
+    }
+
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      viewModel.tasks.clear();
+      viewModel.tasks.addAll(loadedTasks);
+    });
+  }
 
   // Variables
 
@@ -261,13 +260,8 @@ Future<void> loadTasks() async {
                       },
 
                       onReorderItem: (oldIndex, newIndex) {
-                        setState(() {
-                          // if (newIndex > oldIndex) newIndex -= 1;
-                          final task = viewModel.tasks.removeAt(oldIndex);
-                          viewModel.tasks.insert(newIndex, task);
-                        });
+                        viewModel.reorderTask(oldIndex, newIndex);
 
-                        // speichert die neue Reihenfolge der Tasks.
                         saveTasks();
                       },
 
@@ -440,7 +434,10 @@ Future<void> loadTasks() async {
                   heroTag: "add_task",
                   onPressed: () {
                     viewModel.bottomSheetBuilder(
-                      BottomSheetView(initialText: "", onSubmit: viewModel.addTask),
+                      BottomSheetView(
+                        initialText: "",
+                        onSubmit: viewModel.addTask,
+                      ),
                       context,
                     );
                   },

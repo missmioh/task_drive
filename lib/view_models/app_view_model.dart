@@ -18,7 +18,7 @@ import 'package:todo_app/models/notification_service.dart';
 class AppViewModel extends ChangeNotifier {
   // List<Task> tasks = <Task>[];
 
-    final List<Map<String, dynamic>> tasks = [
+  final List<Map<String, dynamic>> tasks = [
     {'id': 1, 'title': 'Tick', 'done': false},
     {'id': 2, 'title': 'Trick', 'done': false},
     {'id': 3, 'title': 'Track', 'done': false},
@@ -42,29 +42,36 @@ class AppViewModel extends ChangeNotifier {
   // Task-Management
 
   void addTask(String title) {
-  if (title.trim().isEmpty) return;
+    if (title.trim().isEmpty) return;
 
-  tasks.insert(0, {
-    'id': DateTime.now().microsecondsSinceEpoch,
-    'title': title.trim(),
-    'done': false,
-  });
+    tasks.insert(0, {
+      'id': DateTime.now().microsecondsSinceEpoch,
+      'title': title.trim(),
+      'done': false,
+    });
 
-  notifyListeners();
+    notifyListeners();
   }
 
   void deleteTask(int taskIndex) {
-  tasks.removeAt(taskIndex);
+    tasks.removeAt(taskIndex);
 
-  notifyListeners();
+    notifyListeners();
   }
 
   void editTask(int index, String newTitle) {
-  if (newTitle.trim().isEmpty) return;
+    if (newTitle.trim().isEmpty) return;
 
-  tasks[index]['title'] = newTitle.trim();
+    tasks[index]['title'] = newTitle.trim();
 
-  notifyListeners();
+    notifyListeners();
+  }
+
+  void reorderTask(int oldIndex, int newIndex) {
+    final task = tasks.removeAt(oldIndex);
+    tasks.insert(newIndex, task);
+
+    notifyListeners();
   }
 
   // Zufallsminuten-Generator
@@ -75,7 +82,7 @@ class AppViewModel extends ChangeNotifier {
   }
 
   // Task-Reminder
-  
+
   Future<void> startReminderForTask(
     Map<String, dynamic> task,
     NotificationService notificationService,
