@@ -233,10 +233,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         );
                       },
 
-                      onReorderItem: (oldIndex, newIndex) {
-                        viewModel.reorderTask(oldIndex, newIndex);
-                        viewModel.saveTasks();
-                      },
+                      onReorderItem: viewModel.reorderTask,
 
                       itemBuilder: (context, index) {
                         final task = viewModel.tasks[index];
@@ -331,9 +328,6 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                             index,
                                             newValue,
                                           );
-
-                                          // Erledigt-Status speichern
-                                          viewModel.saveTasks();
                                         },
                                       ),
                                     ),
@@ -380,8 +374,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                   // wird später durch Abbruch-Button ersetzt
                   heroTag: "notification_test",
                   onPressed: () async {
-                    await viewModel.notificationService
-                        .scheduleTestNotification();
+                    await viewModel.scheduleTestNotification();
                   },
                   backgroundColor: viewModel.colorText,
                   shape: RoundedRectangleBorder(
