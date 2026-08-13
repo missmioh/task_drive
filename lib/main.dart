@@ -9,15 +9,15 @@ import 'package:todo_app/views/bottom_sheet.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final taskStorageService = TaskStorageService();
   final notificationService = NotificationService();
   await notificationService.initialize();
 
   runApp(
     MultiProvider(
       providers: [
-        Provider<NotificationService>.value(value: notificationService),
         ChangeNotifierProvider(
-          create: (_) => AppViewModel(TaskStorageService()),
+          create: (_) => AppViewModel(taskStorageService, notificationService),
         ),
       ],
       child: const AddictiveTasks(),
@@ -346,14 +346,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         color: Colors.transparent,
                                         child: InkWell(
                                           onTap: () async {
-                                            final notificationService = context
-                                                .read<NotificationService>();
-
                                             await viewModel
-                                                .startReminderForTask(
-                                                  task,
-                                                  notificationService,
-                                                );
+                                                .startReminderForTask(task);
                                           },
                                           child: Center(
                                             child: Icon(
@@ -386,10 +380,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                   // wird später durch Abbruch-Button ersetzt
                   heroTag: "notification_test",
                   onPressed: () async {
-                    final notificationService = context
-                        .read<NotificationService>();
-
-                    await notificationService.scheduleTestNotification();
+                    await viewModel.notificationService
+                        .scheduleTestNotification();
                   },
                   backgroundColor: viewModel.colorText,
                   shape: RoundedRectangleBorder(

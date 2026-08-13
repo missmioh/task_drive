@@ -4,10 +4,12 @@ import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/models/task_storage_service.dart';
 
 class AppViewModel extends ChangeNotifier {
+  // Benachrichtigungs-Service
+  final NotificationService notificationService;
   // Speicherung
   final TaskStorageService taskStorageService;
 
-  AppViewModel(this.taskStorageService);
+  AppViewModel(this.taskStorageService, this.notificationService);
 
   // Tasks
   final List<Map<String, dynamic>> tasks = [
@@ -110,10 +112,7 @@ class AppViewModel extends ChangeNotifier {
 
   // Task-Reminder
 
-  Future<void> startReminderForTask(
-    Map<String, dynamic> task,
-    NotificationService notificationService,
-  ) async {
+  Future<void> startReminderForTask(Map<String, dynamic> task) async {
     debugPrint("Task: ${task['title']}");
     debugPrint("ID: ${task['id']}");
     final minutes = createRandomReminderMinutes();
@@ -133,6 +132,10 @@ class AppViewModel extends ChangeNotifier {
     debugPrint("SET ACTIVE TASK ID: $id");
     activeTaskId = id;
     notifyListeners();
+  }
+
+  Future<void> scheduleTestNotification() async {
+    await notificationService.scheduleTestNotification();
   }
 
   // Farb-Schemata
