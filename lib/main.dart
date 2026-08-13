@@ -63,24 +63,68 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
               centerTitle: false,
               titleSpacing: 0,
               backgroundColor: viewModel.colorText,
-              leading: Padding(
-                padding: const EdgeInsets.all(3),
-                child: Image.asset(
-                  'assets/images/logo_freigestellt.png',
-                  fit: BoxFit.contain,
+              leading: Builder(
+                builder: (context) => Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.menu),
+                      color: viewModel.colorLight,
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    ),
+
+                    SizedBox(
+                      width: 70,
+                      child: Image.asset(
+                        'assets/images/logo_freigestellt.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               title: Text(
                 'Task Drive',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontFamily: 'BungeeShade',
-                  fontSize: 40,
+                  fontSize: 36,
                   fontWeight: FontWeight(600),
                   color: viewModel.colorLight,
                 ),
               ),
             ),
+
+            drawer: Drawer(
+              child: ListView(
+                children: [
+                  const DrawerHeader(child: Text("Menü")),
+
+                  ListTile(
+                    leading: const Icon(Icons.task),
+                    title: const Text("Tasks"),
+                    onTap: () {
+                      debugPrint("Aufgaben gedrückt");
+                      Navigator.pop(context);
+                    },
+                  ),
+
+                  ListTile(
+                    leading: const Icon(Icons.wallet_giftcard_rounded),
+                    title: const Text("Reward Area"),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RewardArea()),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
             body: Column(
               children: [
                 // header, wo z.B. User-Daten stehen könnten
