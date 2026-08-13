@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/notification_service.dart';
 import 'package:todo_app/view_models/app_view_model.dart';
+import 'package:todo_app/models/task_storage_service.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/views/bottom_sheet.dart';
-import 'dart:convert';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // Plugin-Schnittstellen vorbereiten
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final taskStorageService = TaskStorageService();
   final notificationService = NotificationService();
   await notificationService.initialize();
 
   runApp(
     MultiProvider(
       providers: [
-        Provider<NotificationService>.value(value: notificationService),
-        ChangeNotifierProvider(create: (_) => AppViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => AppViewModel(taskStorageService, notificationService),
+        ),
       ],
       child: const AddictiveTasks(),
     ),
@@ -32,117 +33,13 @@ class AddictiveTasks extends StatefulWidget {
 }
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
-  final List<Map<String, dynamic>> tasks = [
-    {'id': 1, 'title': 'Tick', 'done': false},
-    {'id': 2, 'title': 'Trick', 'done': false},
-    {'id': 3, 'title': 'Track', 'done': false},
-  ];
-
-  // Schlüssel, unter dem die Task-Liste in SharedPreferences gespeichert wird.
-  static const String tasksStorageKey = 'tasks';
-
   @override
   void initState() {
     super.initState();
+    final viewModel = Provider.of<AppViewModel>(context, listen: false);
 
     // Bereits gespeicherte Tasks laden, sobald das Widget erstellt wird.
-    loadTasks();
-  }
-
-  // Funktionen
-
-  //gesamtzahl aller Tasks
-  int get numTasks => tasks.length;
-
-  //Anzahl aller Tasks, die noch nicht erledigt sind
-  int get numTasksRemaining {
-    return tasks.where((task) => task['done'] != true).length;
-  }
-
-  //generiert für jeden neuen Task eine eindeutge ID ahhand des Zeitpunkts
-  // String createTaskId() {
-  //   return DateTime.now().microsecondsSinceEpoch.toString();
-  // }
-
-  // Speichert die aktuelle Task-Liste auf dem Gerät.
-  Future<void> saveTasks() async {
-    final SharedPreferences preferences =
-        await SharedPreferences.getInstance(); // öffnet lokalen Speicher.
-
-    // SharedPreferences kann keine List<Map> direkt speichern.
-    // Deshalb wird die Task-Liste in einen JSON-String umgewandelt.
-    final String tasksAsJson = jsonEncode(tasks); // wandelt Liste als String um
-
-    await preferences.setString(
-      tasksStorageKey,
-      tasksAsJson,
-    ); // speichert den Sting
-  }
-
-  // Lädt zuvor gespeicherte Task-Liste vom Gerät.
-  Future<void> loadTasks() async {
-    final SharedPreferences preferences = await SharedPreferences.getInstance();
-
-    final String? tasksAsJson = preferences.getString(tasksStorageKey);
-
-    // Beim ersten App-Start gibt es noch keine gespeicherten Tasks.
-    // In dem Fall bleiben die Beispiel-Tasks bestehen.
-    if (tasksAsJson == null) {
-      return;
-    }
-    // Den gespeicherten JSON-String wieder in Dart-Liste umwandeln.
-    final List<dynamic> decodedTasks = jsonDecode(tasksAsJson);
-
-    // Die einzelnen Listen-Elemente wieder in Task-Maps umwandeln.
-    final List<Map<String, dynamic>> loadedTasks = decodedTasks.map((task) {
-      return Map<String, dynamic>.from(task);
-    }).toList();
-
-    // Nach asynchronem Vorgang prüfen, ob das Widget noch existiert.
-    if (!mounted) {
-      return;
-    }
-
-    //Beispiel-Tasks durch die gespeicherten Tasks ersetzen.
-    setState(() {
-      tasks.clear();
-      tasks.addAll(loadedTasks);
-    });
-  }
-
-  void addTask(String title) {
-    if (title.trim().isEmpty) return;
-
-    setState(() {
-      tasks.insert(0, {
-        'id': DateTime.now().microsecondsSinceEpoch,
-        'title': title.trim(),
-        'done': false,
-      });
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
-  }
-
-  void deleteTask(int taskIndex) {
-    setState(() {
-      tasks.removeAt(taskIndex);
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
-  }
-
-  void editTask(int index, String newTitle) {
-    if (newTitle.trim().isEmpty) return;
-
-    setState(() {
-      tasks[index]['title'] = newTitle.trim();
-    });
-
-    // Geänderten Zustand dauerhaft speichern
-    saveTasks();
+    viewModel.loadTasks();
   }
 
   // Variables
@@ -231,7 +128,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
-                                        '$numTasks',
+                                        '${viewModel.numTasks}',
                                         style: TextStyle(
                                           fontFamily: 'BungeeInline',
                                           fontSize: 28,
@@ -283,7 +180,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
-                                        '$numTasksRemaining',
+                                        '${viewModel.numTasksRemaining}',
                                         style: TextStyle(
                                           fontFamily: 'BungeeInline',
                                           fontSize: 28,
@@ -326,7 +223,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                     color: viewModel.colorMedium,
                     child: ReorderableListView.builder(
                       padding: const EdgeInsets.all(12),
-                      itemCount: tasks.length,
+                      itemCount: viewModel.tasks.length,
 
                       // überschreibt die Standard-Einstellung für weißen Hintergrund von Drag-Items
                       proxyDecorator: (child, index, animation) {
@@ -336,19 +233,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                         );
                       },
 
-                      onReorderItem: (oldIndex, newIndex) {
-                        setState(() {
-                          // if (newIndex > oldIndex) newIndex -= 1;
-                          final task = tasks.removeAt(oldIndex);
-                          tasks.insert(newIndex, task);
-                        });
-
-                        // speichert die neue Reihenfolge der Tasks.
-                        saveTasks();
-                      },
+                      onReorderItem: viewModel.reorderTask,
 
                       itemBuilder: (context, index) {
-                        final task = tasks[index];
+                        final task = viewModel.tasks[index];
 
                         debugPrint("Task: ${task['title']} ID: ${task['id']}");
                         debugPrint("Active: ${viewModel.activeTaskId}");
@@ -357,7 +245,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                           key: ValueKey(task['id']),
                           onDismissed: (direction) {
                             // aktualisiert die Oberfläche und speichert die Liste
-                            deleteTask(index);
+                            viewModel.deleteTask(index);
                           },
                           background: Container(
                             margin: EdgeInsets.fromLTRB(5, 0, 5, 12),
@@ -380,7 +268,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                 BottomSheetView(
                                   initialText: task['title'],
                                   onSubmit: (newValue) {
-                                    editTask(index, newValue);
+                                    viewModel.editTask(index, newValue);
                                   },
                                 ),
                                 context,
@@ -436,12 +324,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         activeColor: viewModel.colorDarkest,
                                         checkColor: viewModel.colorLight,
                                         onChanged: (newValue) {
-                                          setState(() {
-                                            task['done'] = newValue ?? false;
-                                          });
-
-                                          // Erledigt-Status speichern
-                                          saveTasks();
+                                          viewModel.toggleTaskDone(
+                                            index,
+                                            newValue,
+                                          );
                                         },
                                       ),
                                     ),
@@ -454,14 +340,8 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                         color: Colors.transparent,
                                         child: InkWell(
                                           onTap: () async {
-                                            final notificationService = context
-                                                .read<NotificationService>();
-
                                             await viewModel
-                                                .startReminderForTask(
-                                                  task,
-                                                  notificationService,
-                                                );
+                                                .startReminderForTask(task);
                                           },
                                           child: Center(
                                             child: Icon(
@@ -494,10 +374,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                   // wird später durch Abbruch-Button ersetzt
                   heroTag: "notification_test",
                   onPressed: () async {
-                    final notificationService = context
-                        .read<NotificationService>();
-
-                    await notificationService.scheduleTestNotification();
+                    await viewModel.scheduleTestNotification();
                   },
                   backgroundColor: viewModel.colorText,
                   shape: RoundedRectangleBorder(
@@ -516,7 +393,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                   heroTag: "add_task",
                   onPressed: () {
                     viewModel.bottomSheetBuilder(
-                      BottomSheetView(initialText: "", onSubmit: addTask),
+                      BottomSheetView(
+                        initialText: "",
+                        onSubmit: viewModel.addTask,
+                      ),
                       context,
                     );
                   },

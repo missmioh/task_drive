@@ -1,22 +1,22 @@
-// Ablageort für Funktionen und Farben
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/notification_service.dart';
-
-// Notwendig für Task-Speicherung im Cache
-// wird zurzeit nicht genutzt
-
-// class Task {
-//   String title;
-//   bool complete;
-
-//   Task(this.title, this.complete);
-// }
+import 'package:todo_app/models/task_storage_service.dart';
 
 class AppViewModel extends ChangeNotifier {
-  // List<Task> tasks = <Task>[];
+  // Benachrichtigungs-Service
+  final NotificationService notificationService;
+  // Speicherung
+  final TaskStorageService taskStorageService;
+
+  AppViewModel(this.taskStorageService, this.notificationService);
+
+  // Tasks
+  final List<Map<String, dynamic>> tasks = [
+    {'id': 1, 'title': 'Tick', 'done': false},
+    {'id': 2, 'title': 'Trick', 'done': false},
+    {'id': 3, 'title': 'Track', 'done': false},
+  ];
 
   int? activeTaskId;
 
@@ -24,6 +24,85 @@ class AppViewModel extends ChangeNotifier {
     activeTaskId = id;
     notifyListeners();
   }
+
+  // Gesamtzahl aller Tasks
+  int get numTasks => tasks.length;
+
+  // Anzahl aller Tasks, die noch nicht erledigt sind
+  int get numTasksRemaining {
+    return tasks.where((task) => task['done'] != true).length;
+  }
+
+  // Task-Management
+
+  Future<void> saveTasks() async {
+    await taskStorageService.saveTasks(tasks);
+
+    // notifyListeners(); brauchen wir nicht, weil der Zustand des ViewModels nicht verändert wird
+  }
+
+  Future<void> addTask(String title) async {
+    if (title.trim().isEmpty) return;
+
+    tasks.insert(0, {
+      'id': DateTime.now().microsecondsSinceEpoch,
+      'title': title.trim(),
+      'done': false,
+    });
+
+    await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> deleteTask(int taskIndex) async {
+    tasks.removeAt(taskIndex);
+
+    await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> editTask(int index, String newTitle) async {
+    if (newTitle.trim().isEmpty) return;
+
+    tasks[index]['title'] = newTitle.trim();
+
+    await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> reorderTask(int oldIndex, int newIndex) async {
+    final task = tasks.removeAt(oldIndex);
+    tasks.insert(newIndex, task);
+
+    await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> toggleTaskDone(int index, bool? newValue) async {
+    tasks[index]['done'] = newValue ?? false;
+
+    await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> loadTasks() async {
+    final loadedTasks = await taskStorageService.loadTasks();
+
+    if (loadedTasks == null) {
+      return;
+    }
+
+    tasks.clear();
+    tasks.addAll(loadedTasks);
+
+    notifyListeners();
+  }
+
   // Zufallsminuten-Generator
 
   int createRandomReminderMinutes() {
@@ -31,10 +110,9 @@ class AppViewModel extends ChangeNotifier {
     return random.nextInt(41) + 5;
   }
 
-  Future<void> startReminderForTask(
-    Map<String, dynamic> task,
-    NotificationService notificationService,
-  ) async {
+  // Task-Reminder
+
+  Future<void> startReminderForTask(Map<String, dynamic> task) async {
     debugPrint("Task: ${task['title']}");
     debugPrint("ID: ${task['id']}");
     final minutes = createRandomReminderMinutes();
@@ -54,6 +132,10 @@ class AppViewModel extends ChangeNotifier {
     debugPrint("SET ACTIVE TASK ID: $id");
     activeTaskId = id;
     notifyListeners();
+  }
+
+  Future<void> scheduleTestNotification() async {
+    await notificationService.scheduleTestNotification();
   }
 
   // Farb-Schemata
