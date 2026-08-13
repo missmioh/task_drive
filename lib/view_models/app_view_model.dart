@@ -1,23 +1,15 @@
-// Ablageort für Funktionen und Farben
-
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/notification_service.dart';
-
-// Notwendig für Task-Speicherung im Cache
-// wird zurzeit nicht genutzt
-
-// class Task {
-//   String title;
-//   bool complete;
-
-//   Task(this.title, this.complete);
-// }
+import 'package:todo_app/models/task_storage_service.dart';
 
 class AppViewModel extends ChangeNotifier {
-  // List<Task> tasks = <Task>[];
+  // Speicherung
+  final TaskStorageService taskStorageService;
 
+  AppViewModel(this.taskStorageService);
+
+  // Tasks
   final List<Map<String, dynamic>> tasks = [
     {'id': 1, 'title': 'Tick', 'done': false},
     {'id': 2, 'title': 'Trick', 'done': false},
@@ -41,7 +33,7 @@ class AppViewModel extends ChangeNotifier {
 
   // Task-Management
 
-  void addTask(String title) {
+  Future<void> addTask(String title) async {
     if (title.trim().isEmpty) return;
 
     tasks.insert(0, {
@@ -50,32 +42,43 @@ class AppViewModel extends ChangeNotifier {
       'done': false,
     });
 
+    await taskStorageService.saveTasks(tasks);
+
     notifyListeners();
   }
 
-  void deleteTask(int taskIndex) {
+  Future<void> deleteTask(int taskIndex) async {
     tasks.removeAt(taskIndex);
 
+    await taskStorageService.saveTasks(tasks);
+
     notifyListeners();
   }
 
-  void editTask(int index, String newTitle) {
+  Future<void> editTask(int index, String newTitle) async {
     if (newTitle.trim().isEmpty) return;
 
     tasks[index]['title'] = newTitle.trim();
 
+    await taskStorageService.saveTasks(tasks);
+
     notifyListeners();
   }
 
-  void reorderTask(int oldIndex, int newIndex) {
+  Future<void> reorderTask(int oldIndex, int newIndex) async {
     final task = tasks.removeAt(oldIndex);
     tasks.insert(newIndex, task);
 
+    await taskStorageService.saveTasks(tasks);
+
     notifyListeners();
   }
 
-  void toggleTaskDone(int index, bool? newValue) {
+  Future<void> toggleTaskDone(int index, bool? newValue) async {
     tasks[index]['done'] = newValue ?? false;
+
+    await taskStorageService.saveTasks(tasks);
+
     notifyListeners();
   }
 

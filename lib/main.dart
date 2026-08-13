@@ -16,7 +16,9 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         Provider<NotificationService>.value(value: notificationService),
-        ChangeNotifierProvider(create: (_) => AppViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => AppViewModel(TaskStorageService()),
+        ),
       ],
       child: const AddictiveTasks(),
     ),
