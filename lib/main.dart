@@ -33,41 +33,13 @@ class AddictiveTasks extends StatefulWidget {
 }
 
 class _AddictiveTasksState extends State<AddictiveTasks> {
-  final TaskStorageService taskStorageService = TaskStorageService();
-
   @override
   void initState() {
     super.initState();
+    final viewModel = Provider.of<AppViewModel>(context, listen: false);
 
     // Bereits gespeicherte Tasks laden, sobald das Widget erstellt wird.
-    loadTasks();
-  }
-
-  // Funktionen
-
-  Future<void> saveTasks() async {
-    final viewModel = Provider.of<AppViewModel>(context, listen: false);
-    await taskStorageService.saveTasks(viewModel.tasks);
-  }
-
-  Future<void> loadTasks() async {
-    final viewModel = Provider.of<AppViewModel>(context, listen: false);
-
-    final List<Map<String, dynamic>>? loadedTasks = await taskStorageService
-        .loadTasks();
-
-    if (loadedTasks == null) {
-      return;
-    }
-
-    if (!mounted) {
-      return;
-    }
-
-    setState(() {
-      viewModel.tasks.clear();
-      viewModel.tasks.addAll(loadedTasks);
-    });
+    viewModel.loadTasks();
   }
 
   // Variables
@@ -263,8 +235,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                       onReorderItem: (oldIndex, newIndex) {
                         viewModel.reorderTask(oldIndex, newIndex);
-
-                        saveTasks();
+                        viewModel.saveTasks();
                       },
 
                       itemBuilder: (context, index) {
@@ -362,7 +333,7 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
                                           );
 
                                           // Erledigt-Status speichern
-                                          saveTasks();
+                                          viewModel.saveTasks();
                                         },
                                       ),
                                     ),

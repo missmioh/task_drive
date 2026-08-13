@@ -33,6 +33,12 @@ class AppViewModel extends ChangeNotifier {
 
   // Task-Management
 
+  Future<void> saveTasks() async {
+    await taskStorageService.saveTasks(tasks);
+
+    // notifyListeners(); brauchen wir nicht, weil der Zustand des ViewModels nicht verändert wird
+  }
+
   Future<void> addTask(String title) async {
     if (title.trim().isEmpty) return;
 
@@ -78,6 +84,19 @@ class AppViewModel extends ChangeNotifier {
     tasks[index]['done'] = newValue ?? false;
 
     await taskStorageService.saveTasks(tasks);
+
+    notifyListeners();
+  }
+
+  Future<void> loadTasks() async {
+    final loadedTasks = await taskStorageService.loadTasks();
+
+    if (loadedTasks == null) {
+      return;
+    }
+
+    tasks.clear();
+    tasks.addAll(loadedTasks);
 
     notifyListeners();
   }
