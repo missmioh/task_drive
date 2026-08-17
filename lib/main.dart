@@ -98,13 +98,25 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
             ),
 
             drawer: Drawer(
+              backgroundColor: viewModel.colorDark,
               child: ListView(
                 children: [
-                  const DrawerHeader(child: Text("Menü")),
+                  const DrawerHeader(
+                    child: Text(
+                      "Menü",
+                      style: TextStyle(
+                        fontFamily: 'BungeeInline',
+                        fontSize: 28,
+                      ),
+                    ),
+                  ),
 
                   ListTile(
                     leading: const Icon(Icons.task),
-                    title: const Text("Tasks"),
+                    title: const Text(
+                      "Tasks",
+                      style: TextStyle(fontFamily: 'Alatsi', fontSize: 20),
+                    ),
                     onTap: () {
                       debugPrint("Aufgaben gedrückt");
                       Navigator.pop(context);
@@ -113,7 +125,10 @@ class _AddictiveTasksState extends State<AddictiveTasks> {
 
                   ListTile(
                     leading: const Icon(Icons.wallet_giftcard_rounded),
-                    title: const Text("Reward Area"),
+                    title: const Text(
+                      "Reward Area",
+                      style: TextStyle(fontFamily: 'Alatsi', fontSize: 20),
+                    ),
                     onTap: () {
                       Navigator.push(
                         context,
